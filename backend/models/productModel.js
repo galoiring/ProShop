@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import products from "../data/products";
 
 const reviewSchema = mongoose.Schema(
   {
@@ -37,7 +36,7 @@ const productSchema = new mongoose.Schema(
       type: String,
       require: true,
     },
-    Image: {
+    image: {
       type: String,
       require: true,
     },
