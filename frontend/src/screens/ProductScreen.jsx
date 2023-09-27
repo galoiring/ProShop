@@ -4,11 +4,14 @@ import { Row, Col, Image, ListGroup, Card, Button } from "react-bootstrap";
 import Rating from "../components/Rating";
 import { useGetProductDetailsQuery } from "../slices/productsApiSlice";
 import Loader from "../components/Loader";
+import Message from "../components/Message";
 
 const ProductScreen = () => {
   const { id: productId } = useParams();
 
-  const { data: product, isLoading } = useGetProductDetailsQuery(productId);
+  const { data: product, isLoading, error } = useGetProductDetailsQuery(
+    productId
+  );
 
   return (
     <>
@@ -18,6 +21,8 @@ const ProductScreen = () => {
 
       {isLoading ? (
         <Loader />
+      ) : error ? (
+        <Message varient='danger'>{error.data.message || error.error}</Message>
       ) : (
         <Row>
           <Col md={5}>
