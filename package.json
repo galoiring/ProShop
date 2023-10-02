@@ -2,9 +2,11 @@
   "name": "proshop-v2",
   "version": "1.0.0",
   "description": "eCommerce application build with MERN stack",
+  "type": "module",
+  "proxy": "http://localhost:5000",
   "main": "server.js",
   "scripts": {
-    "start": "node --loader ts-node/esm backend/server.js",
+    "start": "node backend/server.js",
     "server": "nodemon backend/server.js",
     "client": "npm start --prefix frontend",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
@@ -22,12 +24,12 @@
     "colors": "^1.4.0",
     "cors": "^2.8.5",
     "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.2",
     "mongoose": "^7.5.2"
   },
   "devDependencies": {
     "concurrently": "^8.2.1",
     "dotenv": "^16.3.1",
     "nodemon": "^3.0.1"
-  },
-  "type": "module"
+  }
 }
