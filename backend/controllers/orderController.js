@@ -1,6 +1,6 @@
 import asyncHandler from "../middleware/asyncHandler.js";
 import Order from "../models/orderModel.js";
-
+import Product from "../models/productModel.js";
 //@desc Create new order
 //@route POST /api/orders
 //@access Private
@@ -9,7 +9,7 @@ const addOrderItems = asyncHandler(async (req, res) => {
     orderItems,
     shippingAddress,
     paymentMethod,
-    itemPrice,
+    itemsPrice,
     taxPrice,
     shippingPrice,
     totalPrice,
@@ -28,14 +28,13 @@ const addOrderItems = asyncHandler(async (req, res) => {
       user: req.user._id,
       shippingAddress,
       paymentMethod,
-      itemPrice,
+      itemsPrice,
       taxPrice,
       shippingPrice,
       totalPrice,
     });
 
     const createdOrder = await order.save();
-
     res.status(201).json(createdOrder);
   }
 });
