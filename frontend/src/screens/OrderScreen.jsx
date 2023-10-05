@@ -58,15 +58,79 @@ const OrderScreen = () => {
                 <strong>Method: </strong>
                 {order.paymentMethod}
               </p>
-              {order.isPayed ? (
-                <Message varient='success'>Payed on {order.payedAt}</Message>
+              {order.isPaid ? (
+                <Message variant='success'>Paid on {order.paidAt}</Message>
               ) : (
                 <Message varient='danger'>Not Payed</Message>
               )}
             </ListGroup.Item>
+
+            <ListGroup.Item>
+              <h2>Order Items</h2>
+              {order.orderItems.length === 0 ? (
+                <Message>Order is empty</Message>
+              ) : (
+                <ListGroup variant='flush'>
+                  {order.orderItems.map((item, index) => (
+                    <ListGroup.Item key={index}>
+                      <Row>
+                        <Col md={1}>
+                          <Image
+                            src={item.image}
+                            alt={item.name}
+                            fluid
+                            rounded
+                          />
+                        </Col>
+                        <Col>
+                          <Link to={`/product/${item.product}`}>
+                            {item.name}
+                          </Link>
+                        </Col>
+                        <Col md={4}>
+                          {item.qty} x ${item.price} = ${item.qty * item.price}
+                        </Col>
+                      </Row>
+                    </ListGroup.Item>
+                  ))}
+                </ListGroup>
+              )}
+            </ListGroup.Item>
           </ListGroup>
         </Col>
-        <Col md={4}></Col>
+        <Col md={4}>
+          <Card>
+            <ListGroup variant='flush'>
+              <ListGroup.Item>
+                <h2>Order Summary</h2>
+              </ListGroup.Item>
+              <ListGroup.Item>
+                <Row>
+                  <Col>Items</Col>
+                  <Col>${order.itemsPrice}</Col>
+                </Row>
+
+                <Row>
+                  <Col>Shipping</Col>
+                  <Col>${order.shippingPrice}</Col>
+                </Row>
+                <Row>
+                  <Col>Tax</Col>
+                  <Col>${order.taxPrice}</Col>
+                </Row>
+
+                <Row>
+                  <Col>
+                    <strong>Total</strong>
+                  </Col>
+                  <Col>${order.totalPrice}</Col>
+                </Row>
+              </ListGroup.Item>
+              {/* pay button placeholder */}
+              {/* mark as delivered  placeholder */}
+            </ListGroup>
+          </Card>
+        </Col>
       </Row>
     </>
   );
