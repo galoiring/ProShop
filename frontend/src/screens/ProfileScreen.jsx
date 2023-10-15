@@ -15,18 +15,38 @@ const ProfileScreen = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const dispatch = useDispatch();
-
   const { userInfo } = useSelector((state) => state.auth);
+
+  const [
+    updateProfile,
+    { isLoading: loadingUpdateProfile },
+  ] = useProfileMutation();
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     setName(userInfo.name);
     setEmail(userInfo.email);
-  }, [userInfo.name, userInfo.email]);
+  }, [userInfo, userInfo.name, userInfo.email]);
 
-  const submitHandler = (e) => {
+  const submitHandler = async (e) => {
     e.preventDefault();
-    console.log(userInfo);
+    if (password !== confirmPassword) {
+      toast.error("Password do not match");
+    } else {
+      try {
+        const res = await updateProfile({
+          _id: userInfo._id,
+          name,
+          email,
+          password,
+        }).unwrap();
+        dispatch(setCredentials(res));
+        toast.success("Profile updated successfully");
+      } catch (error) {
+        toast.error(error.data.message || error.error);
+      }
+    }
   };
 
   return (
