@@ -22,9 +22,9 @@ const getProductById = asyncHandler(async (req, res) => {
   }
 });
 
-//@desc Create a products
-//@route POST /api/products
-//@access Private/Admin
+// @desc    Create a product
+// @route   POST /api/products
+// @access  Private/Admin
 const createProduct = asyncHandler(async (req, res) => {
   const product = new Product({
     name: "Sample name",
@@ -35,8 +35,10 @@ const createProduct = asyncHandler(async (req, res) => {
     category: "Sample category",
     countInStock: 0,
     numReviews: 0,
-    description: "Sample desctiption",
+    description: "Sample description",
   });
+
+  console.log("creating new product");
 
   const createdProduct = await product.save();
   res.status(201).json(createdProduct);
