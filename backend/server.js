@@ -15,14 +15,13 @@ connectDB();
 
 const app = express();
 
-// Body parser middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Cookie parser middleware
 app.use(cookieParser());
 
-app.use(cors()); // Use the cors middleware to allow all origins during development
+// app.use(cors()); // Use the cors middleware to allow all origins during development
 
 app.get("/", (req, res) => {
   res.send("API is running ...");
