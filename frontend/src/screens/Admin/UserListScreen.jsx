@@ -58,7 +58,7 @@ const UserListScreen = () => {
                     className='btn-sm'
                     onClick={() => deleteHandler(user._id)}
                   >
-                    <FaTrash />
+                    <FaTrash style={{ color: "white" }} />
                   </Button>
                 </td>
               </tr>
