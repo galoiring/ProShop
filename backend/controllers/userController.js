@@ -122,7 +122,7 @@ const updateUserProfile = asyncHandler(async (req, res) => {
 //@access Private/Admin
 const getUsers = asyncHandler(async (req, res) => {
   const users = await User.find({});
-  res.send(200).json(users);
+  res.status(200).json(users);
 });
 
 //@desc Get user profile by ID
@@ -132,7 +132,7 @@ const getUserByID = asyncHandler(async (req, res) => {
   const user = await User.findById(req.params.id).select("-password");
 
   if (user) {
-    res.send(200).json(user);
+    res.status(200).json(user);
   } else {
     res.status(404);
     throw new Error("User not found");
