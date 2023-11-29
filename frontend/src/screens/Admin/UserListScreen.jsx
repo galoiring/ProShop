@@ -32,7 +32,7 @@ const UserListScreen = () => {
       {isLoading ? (
         <Loader />
       ) : error ? (
-        <Message varient='danger'>BLA</Message>
+        <Message varient='danger'>{error}</Message>
       ) : (
         <Table striped hover responsive className='table-sm'>
           <thead>
