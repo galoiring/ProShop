@@ -12,7 +12,7 @@ import {
 
 const UserListScreen = () => {
   const { data: users, refetch, isLoading, error } = useGetUsersQuery();
-  const [deleteUser, { isLoading: loadingDelete }] = useDeleteUserMutation();
+  const [deleteUser] = useDeleteUserMutation();
 
   const deleteHandler = async (id) => {
     if (window.confirm("Are You Sure ?")) {
@@ -29,11 +29,10 @@ const UserListScreen = () => {
   return (
     <>
       <h1>Users</h1>
-      {loadingDelete && <Loader />}
       {isLoading ? (
         <Loader />
       ) : error ? (
-        <Message varient='danger'>{error}</Message>
+        <Message varient='danger'>BLA</Message>
       ) : (
         <Table striped hover responsive className='table-sm'>
           <thead>
@@ -60,20 +59,26 @@ const UserListScreen = () => {
                     <FaTimes style={{ color: "red" }} />
                   )}
                 </td>
-
                 <td>
-                  <LinkContainer to={`admin/user/${user._id}/edit`}>
-                    <Button className='btn-sm' variant='light'>
-                      <FaEdit />
-                    </Button>
-                  </LinkContainer>
-                  <Button
-                    variant='danger'
-                    className='btn-sm'
-                    onClick={() => deleteHandler(user._id)}
-                  >
-                    <FaTrash style={{ color: "white" }} />
-                  </Button>
+                  {!user.isAdmin && (
+                    <>
+                      <LinkContainer
+                        to={`/admin/user/${user._id}/edit`}
+                        style={{ marginRight: "10px" }}
+                      >
+                        <Button variant='light' className='btn-sm'>
+                          <FaEdit />
+                        </Button>
+                      </LinkContainer>
+                      <Button
+                        variant='danger'
+                        className='btn-sm'
+                        onClick={() => deleteHandler(user._id)}
+                      >
+                        <FaTrash style={{ color: "white" }} />
+                      </Button>
+                    </>
+                  )}
                 </td>
               </tr>
             ))}
