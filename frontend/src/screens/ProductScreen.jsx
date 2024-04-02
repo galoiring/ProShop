@@ -16,8 +16,9 @@ import {
   useGetProductDetailsQuery,
   useCreateReviewMutation,
 } from "../slices/productsApiSlice";
-import Loader from "../components/Loader";
+import Loader from "../components/UI/Loader";
 import Message from "../components/Message";
+import Meta from "../components/Meta";
 import { toast } from "react-toastify";
 import { addToCart } from "../slices/cartSlice";
 
@@ -85,6 +86,8 @@ const ProductScreen = () => {
         <Message varient='danger'>{error.data.message || error.error}</Message>
       ) : (
         <>
+          <Meta title={product.name} />
+
           <Row>
             <Col md={5}>
               <Image src={product.image} alt={product.name} fluid />
