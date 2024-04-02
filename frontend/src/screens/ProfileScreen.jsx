@@ -96,6 +96,7 @@ const ProfileScreen = () => {
           <Button type='submit' variant='primary' className='my-2'>
             Update
           </Button>
+          {loadingUpdateProfile && <Loader />}
         </Form>
       </Col>
       <Col md={9}>
