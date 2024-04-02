@@ -4,7 +4,7 @@ import { Table, Form, Button, Row, Col } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import Loader from "../components/Loader";
+import Loader from "../components/UI/Loader";
 import Message from "../components/Message";
 import { FaTimes } from "react-icons/fa";
 import { useProfileMutation } from "../slices/userApiSlice";

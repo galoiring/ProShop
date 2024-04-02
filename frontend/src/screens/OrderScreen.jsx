@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { Row, Col, ListGroup, Image, Button, Card } from "react-bootstrap";
 import { PayPalButtons, usePayPalScriptReducer } from "@paypal/react-paypal-js";
 import Message from "../components/Message";
-import Loader from "../components/Loader";
+import Loader from "../components/UI/Loader";
 import {
   useGetOrderDetailsQuery,
   usePayOrderMutation,

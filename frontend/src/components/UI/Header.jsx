@@ -3,10 +3,10 @@ import { Navbar, Nav, Container, Badge, NavDropdown } from "react-bootstrap";
 import { FaShoppingCart, FaUser } from "react-icons/fa";
 import { LinkContainer } from "react-router-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
-import { useLogoutMutation } from "../slices/userApiSlice";
-import { logout } from "../slices/authSlice";
-import SearchBox from "./SearchBox";
-import logo from "../assets/logo.png";
+import { useLogoutMutation } from "../../slices/userApiSlice";
+import { logout } from "../../slices/authSlice";
+import SearchBox from "../SearchBox";
+import logo from "../../assets/logo.png";
 import React from "react";
 
 const Header = () => {

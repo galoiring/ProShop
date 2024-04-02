@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Form, Button } from "react-bootstrap";
 import Message from "../../components/Message";
-import Loader from "../../components/Loader";
+import Loader from "../../components/UI/Loader";
 import FormContainer from "../../components/FormContainer";
 import { toast } from "react-toastify";
 import { useParams } from "react-router-dom";
