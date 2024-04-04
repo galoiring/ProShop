@@ -1,3 +1,5 @@
+//server.js
+
 import path from "path";
 import express from "express";
 import connectDB from "./config/db.js";
@@ -8,6 +10,9 @@ import orderRoutes from "./routes/orderRoutes.js";
 import uploadRoutes from "./routes/uploadRoutes.js";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
+import passport from "passport";
+import "./config/passport.js"; // Correct way to import
+
 import cors from "cors"; // Import the cors middleware
 dotenv.config();
 
@@ -16,6 +21,7 @@ const port = process.env.PORT || 5000;
 connectDB();
 
 const app = express();
+app.use(passport.initialize());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
