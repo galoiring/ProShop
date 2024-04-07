@@ -9,6 +9,14 @@ import uploadRoutes from "./routes/uploadRoutes.js";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import cors from "cors"; // Import the cors middleware
+
+import passport from "passport";
+import "./config/passport.js";
+import generateToken from "./utils/generateToken.js";
+import session from "express-session";
+import jwt from "jsonwebtoken";
+import User from "./models/userModel.js";
+
 dotenv.config();
 
 const port = process.env.PORT || 5000;
@@ -16,6 +24,16 @@ const port = process.env.PORT || 5000;
 connectDB();
 
 const app = express();
+
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET || "keyboard cat",
+    resave: false,
+    saveUninitialized: true,
+  })
+);
+
+app.use(passport.initialize());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -29,6 +47,42 @@ app.use("/api/products", productRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/upload", uploadRoutes);
+
+app.get(
+  "/auth/google",
+  passport.authenticate("google", { scope: ["email", "profile"] })
+);
+
+app.get(
+  "/auth/google/callback",
+  passport.authenticate("google", {
+    failureRedirect: "/api/users/login",
+  }),
+  async (req, res) => {
+    const { name, email, password } = req.user;
+    console.log(req.user);
+    const user = await User.findOne({ email });
+    const userId = user._id;
+    const token = jwt.sign({ userId }, process.env.JWT_SECRET, {
+      expiresIn: "30d",
+    });
+    res.cookie("jwt", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV !== "development",
+      sameSite: "strict",
+      maxAge: 30 * 24 * 60 * 60 * 1000, //30 Days
+    });
+
+    res.status(200).json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      isAdmin: user.isAdmin,
+    });
+
+    // res.redirect("http://localhost:3000");
+  }
+);
 
 app.get("/api/config/paypal", (req, res) =>
   res.send({ clientId: process.env.PAYPAL_CLIENT_ID })

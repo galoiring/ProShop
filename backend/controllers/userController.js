@@ -37,6 +37,7 @@ const authUser = asyncHandler(async (req, res) => {
 
     if (user) {
       // User exists, generate token
+      console.log("inside user CONTROLLER");
       generateToken(res, user._id);
 
       res.status(200).json({
