@@ -43,10 +43,22 @@ const LoginScreen = () => {
     }
   };
 
+  const googleAuth = async (e) => {
+    e.preventDefault();
+    try {
+      // const res = await googleLogin().unwrap();
+      // dispatch(setGCredentials({ ...res }));
+      // navigate(redirect);
+      window.open("http://localhost:5000/auth/google", "_self");
+    } catch (error) {
+      toast.error(error.data.message || error.error);
+    }
+  };
+
   return (
     <FormContainer>
       <h1>Sign In</h1>
-      <Form onSubmit={submitHandler}>
+      <Form>
         <Form.Group controlId='email' className='my-3'>
           <Form.Label>Email Address</Form.Label>
           <Form.Control
@@ -71,8 +83,41 @@ const LoginScreen = () => {
           variant='primary'
           className='mt-2'
           disabled={isLoading}
+          onClick={submitHandler}
         >
           Sign In
+        </Button>
+
+        <h2 className='mt-2'>Or </h2>
+
+        <Button
+          type='button'
+          variant='primary'
+          className='mt-2'
+          style={{
+            width: "100%",
+            textAlign: "center",
+            backgroundColor: "#4285F4",
+            color: "white",
+            border: "none",
+            borderRadius: "4px",
+            padding: "12px",
+            fontWeight: "bold",
+            boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2)",
+            cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+          disabled={isLoading}
+          onClick={googleAuth}
+        >
+          <img
+            src='./images/google.png'
+            alt='Google Logo'
+            style={{ width: "24px", height: "24px", marginRight: "8px" }}
+          />
+          Sign In with Google
         </Button>
 
         {isLoading && <Loader />}
