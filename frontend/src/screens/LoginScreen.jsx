@@ -5,7 +5,10 @@ import { Form, Row, Col, Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import FormContainer from "../components/FormContainer";
 import Loader from "../components/UI/Loader";
-import { useLoginMutation } from "../slices/userApiSlice";
+import {
+  useLoginMutation,
+  useGoogleLoginMutation,
+} from "../slices/userApiSlice";
 import { setCredentials } from "../slices/authSlice";
 import { toast } from "react-toastify";
 
@@ -17,6 +20,7 @@ const LoginScreen = () => {
   const navigate = useNavigate();
 
   const [login, { isLoading }] = useLoginMutation();
+  const [googleLogin, { isLoading: gLoginloading }] = useGoogleLoginMutation();
   const { userInfo } = useSelector((state) => state.auth);
 
   const { search } = useLocation();
@@ -46,7 +50,7 @@ const LoginScreen = () => {
   const googleAuth = async (e) => {
     e.preventDefault();
     try {
-      // const res = await googleLogin().unwrap();
+      const res = await googleLogin().unwrap();
       // dispatch(setGCredentials({ ...res }));
       // navigate(redirect);
       window.open("http://localhost:5000/auth/google", "_self");
