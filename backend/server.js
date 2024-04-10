@@ -25,6 +25,9 @@ connectDB();
 
 const app = express();
 
+// Use the cors middleware to allow all origins during development
+app.use(cors());
+
 app.use(
   session({
     secret: process.env.SESSION_SECRET || "keyboard cat",
@@ -42,8 +45,6 @@ app.use(express.urlencoded({ extended: true }));
 // Cookie parser middleware
 app.use(cookieParser());
 
-// app.use(cors()); // Use the cors middleware to allow all origins during development
-
 app.use("/api/products", productRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/orders", orderRoutes);
@@ -51,28 +52,30 @@ app.use("/api/upload", uploadRoutes);
 
 app.get(
   "/auth/google",
-  passport.authenticate("google", { scope: ["email", "profile"] })
+  passport.authenticate("google", { scope: ["profile", "email"] })
 );
 
 app.get(
   "/auth/google/callback",
-  passport.authenticate("google", {
-    failureRedirect: "/api/users/login",
-  }),
+  passport.authenticate("google", { failureRedirect: "/api/user/login" }),
+
   async (req, res) => {
     const { name, email, password } = req.user;
     console.log(req.user);
     const user = await User.findOne({ email });
     const userId = user._id;
-    const token = jwt.sign({ userId }, process.env.JWT_SECRET, {
+    const us = req.user;
+    const token = jwt.sign({ us }, process.env.JWT_SECRET, {
       expiresIn: "30d",
     });
-    res.cookie("jwt", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV !== "development",
-      sameSite: "strict",
-      maxAge: 30 * 24 * 60 * 60 * 1000, //30 Days
-    });
+    // res.cookie("jwt", token, {
+    //   httpOnly: true,
+    //   secure: process.env.NODE_ENV !== "development",
+    //   sameSite: "strict",
+    //   maxAge: 30 * 24 * 60 * 60 * 1000, //30 Days
+    // });
+
+    res.cookie("jwtToken", token);
 
     res.status(200).json({
       _id: user._id,

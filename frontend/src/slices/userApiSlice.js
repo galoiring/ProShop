@@ -10,6 +10,11 @@ export const usersApiSlice = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
+    googleLogin: builder.mutation({
+      query: () => ({
+        url: "/auth/google",
+      }),
+    }),
     register: builder.mutation({
       query: (data) => ({
         url: `${USERS_URL}`,
@@ -56,11 +61,6 @@ export const usersApiSlice = apiSlice.injectEndpoints({
         body: data,
       }),
       invalidatesTags: ["User"],
-    }),
-    googleLogin: builder.mutation({
-      query: () => ({
-        url: "/auth/google",
-      }),
     }),
   }),
 });

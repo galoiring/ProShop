@@ -51,9 +51,18 @@ const LoginScreen = () => {
     e.preventDefault();
     try {
       const res = await googleLogin().unwrap();
-      // dispatch(setGCredentials({ ...res }));
-      // navigate(redirect);
-      window.open("http://localhost:5000/auth/google", "_self");
+      dispatch(setCredentials({ ...res }));
+      navigate(redirect);
+      // fetch("http://localhost:5000/auth/google", {
+      //   method: "GET",
+      //   headers: {
+      //     Accept: "application/json",
+      //     "Content-Type": "application/json",
+      //     Cache: "no-cache",
+      //   },
+      //   credentials: "same-origin",
+      // });
+      // window.open("http://localhost:5000/auth/google", "_self");
     } catch (error) {
       toast.error(error.data.message || error.error);
     }
