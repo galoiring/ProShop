@@ -1,4 +1,4 @@
-import { Strategy as GoogleStrategy } from "passport-google-oauth2";
+import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import passport from "passport";
 import User from "../models/userModel.js";
 import dotenv from "dotenv";
@@ -10,7 +10,7 @@ passport.use(
       clientID: process.env.CLIENT_ID,
       clientSecret: process.env.CLIENT_SECRET,
       callbackURL: "http://localhost:5000/auth/google/callback",
-      passReqToCallback: true,
+      // passReqToCallback: true,
     },
 
     async (req, accessToken, refreshToken, profile, done) => {
