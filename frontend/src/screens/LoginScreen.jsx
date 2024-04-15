@@ -4,13 +4,9 @@ import { Form, Row, Col, Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import FormContainer from "../components/FormContainer";
 import Loader from "../components/UI/Loader";
-import {
-  useLoginMutation,
-  useGoogleLoginMutation,
-  useGetUserDetailsQuery,
-} from "../slices/userApiSlice";
+import { useLoginMutation } from "../slices/userApiSlice";
 
-import { setCredentials, googleLogin } from "../slices/authSlice";
+import { setCredentials } from "../slices/authSlice";
 import { toast } from "react-toastify";
 
 const LoginScreen = () => {
@@ -21,18 +17,17 @@ const LoginScreen = () => {
   const navigate = useNavigate();
 
   const [login, { isLoading }] = useLoginMutation();
-  // const [googleLogin, { isLoading: gLoginLoading }] = useGoogleLoginMutation();
   const { userInfo } = useSelector((state) => state.auth);
 
   const { search } = useLocation();
   const sp = new URLSearchParams(search);
   const redirect = sp.get("redirect") || "/";
 
-  // useEffect(() => {
-  //   if (userInfo) {
-  //     navigate(redirect);
-  //   }
-  // }, [userInfo, redirect, navigate]);
+  useEffect(() => {
+    if (userInfo) {
+      navigate(redirect);
+    }
+  }, [userInfo, redirect, navigate]);
 
   useEffect(() => {
     const urlParams = new URLSearchParams(search);
