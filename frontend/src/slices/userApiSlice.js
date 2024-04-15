@@ -13,7 +13,13 @@ export const usersApiSlice = apiSlice.injectEndpoints({
     googleLogin: builder.mutation({
       query: () => ({
         url: "/auth/google",
+        method: "GET",
       }),
+      transformResponse: (response) => {
+        // Handle the response from the backend server
+        // and return the necessary data (e.g., user information, access token)
+        return response;
+      },
     }),
     register: builder.mutation({
       query: (data) => ({

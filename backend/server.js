@@ -16,7 +16,6 @@ import generateToken from "./utils/generateToken.js";
 import session from "express-session";
 import jwt from "jsonwebtoken";
 import User from "./models/userModel.js";
-
 dotenv.config();
 
 const port = process.env.PORT || 5000;
@@ -25,8 +24,13 @@ connectDB();
 
 const app = express();
 
-// Use the cors middleware to allow all origins during development
-app.use(cors());
+// Configure CORS
+app.use(
+  cors({
+    origin: "http://localhost:3000", // Allowed origin
+    credentials: true, // Allow sending of cookies
+  })
+);
 
 app.use(
   session({
@@ -52,39 +56,45 @@ app.use("/api/upload", uploadRoutes);
 
 app.get(
   "/auth/google",
-  passport.authenticate("google", { scope: ["profile", "email"] })
+  passport.authenticate("google", {
+    scope: ["profile", "email"],
+  })
 );
 
 app.get(
   "/auth/google/callback",
-  passport.authenticate("google", { failureRedirect: "/api/user/login" }),
+  passport.authenticate("google", {
+    failureRedirect: "/login",
+    session: false,
+  }),
+  async (req, res, next) => {
+    try {
+      console.log("req.user:", req.user);
 
-  async (req, res) => {
-    const { name, email, password } = req.user;
-    console.log(req.user);
-    const user = await User.findOne({ email });
-    const userId = user._id;
-    const us = req.user;
-    const token = jwt.sign({ us }, process.env.JWT_SECRET, {
-      expiresIn: "30d",
-    });
-    // res.cookie("jwt", token, {
-    //   httpOnly: true,
-    //   secure: process.env.NODE_ENV !== "development",
-    //   sameSite: "strict",
-    //   maxAge: 30 * 24 * 60 * 60 * 1000, //30 Days
-    // });
+      // Retrieve user details from the authenticated user object
+      const { _id, name, email, isAdmin } = req.user;
+      const userId = req.user._id.toString();
 
-    res.cookie("jwtToken", token);
+      // Generate a JWT token
+      generateToken(res, userId);
 
-    res.status(200).json({
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      isAdmin: user.isAdmin,
-    });
-
-    // res.redirect("http://localhost:3000");
+      // Dispatch the setCredentials action
+      const userDetails = {
+        _id: userId,
+        name,
+        email,
+        isAdmin,
+        token: res.cookie.jwt,
+      };
+      res.redirect(
+        `http://localhost:3000/login?_id=${userDetails._id}&name=${userDetails.name}&email=${userDetails.email}&isAdmin=${userDetails.isAdmin}&token=${userDetails.token}`
+      );
+    } catch (error) {
+      console.error("Error handling Google OAuth2.0 callback:", error);
+      res
+        .status(500)
+        .json({ message: "Error handling Google OAuth2.0 callback", error });
+    }
   }
 );
 

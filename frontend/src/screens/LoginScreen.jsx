@@ -1,5 +1,4 @@
-import React from "react";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Form, Row, Col, Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
@@ -8,8 +7,10 @@ import Loader from "../components/UI/Loader";
 import {
   useLoginMutation,
   useGoogleLoginMutation,
+  useGetUserDetailsQuery,
 } from "../slices/userApiSlice";
-import { setCredentials } from "../slices/authSlice";
+
+import { setCredentials, googleLogin } from "../slices/authSlice";
 import { toast } from "react-toastify";
 
 const LoginScreen = () => {
@@ -20,58 +21,76 @@ const LoginScreen = () => {
   const navigate = useNavigate();
 
   const [login, { isLoading }] = useLoginMutation();
-  const [googleLogin, { isLoading: gLoginloading }] = useGoogleLoginMutation();
+  // const [googleLogin, { isLoading: gLoginLoading }] = useGoogleLoginMutation();
   const { userInfo } = useSelector((state) => state.auth);
 
   const { search } = useLocation();
   const sp = new URLSearchParams(search);
   const redirect = sp.get("redirect") || "/";
 
-  useEffect(
-    (userInfo, redirect, navigate) => {
-      if (userInfo) {
-        navigate(redirect);
-      }
-    },
-    [userInfo, redirect]
-  );
+  // useEffect(() => {
+  //   if (userInfo) {
+  //     navigate(redirect);
+  //   }
+  // }, [userInfo, redirect, navigate]);
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(search);
+    const _id = urlParams.get("_id");
+    const name = urlParams.get("name");
+    const email = urlParams.get("email");
+    const isAdmin = urlParams.get("isAdmin") === "true"; // Convert string to boolean
+    const token = urlParams.get("token");
+    console.log("useEffect details: ", name);
+    // Dispatch action to set credentials if all required parameters are present
+    if (_id && name && email && typeof isAdmin === "boolean" && token) {
+      dispatch(setCredentials({ _id, name, email, isAdmin }));
+      navigate(redirect); // Redirect to home page after setting credentials
+    }
+  }, [search, dispatch, navigate]);
 
   const submitHandler = async (e) => {
     e.preventDefault();
     try {
       const res = await login({ email, password }).unwrap();
-      dispatch(setCredentials({ ...res }));
+      dispatch(setCredentials(res));
       navigate(redirect);
     } catch (error) {
       toast.error(error.data.message || error.error);
     }
   };
 
-  const googleAuth = async (e) => {
-    e.preventDefault();
+  // const googleAuth = async () => {
+  //   try {
+  //     dispatch(googleSignInStart());
+  //     window.location.href = "http://localhost:5000/auth/google";
+
+  //     // After the redirect, parse the URL parameters and dispatch setCredentials
+  //     const params = new URLSearchParams(window.location.search);
+  //     const userDetailsString = params.get("_id");
+  //     console.log(userDetailsString);
+  //     if (userDetailsString) {
+  //       const userDetails = JSON.parse(decodeURIComponent(userDetailsString));
+  //       dispatch(setCredentials(userDetails));
+  //       navigate("/");
+  //     }
+  //   } catch (error) {
+  //     toast.error(error.data.message || error.error);
+  //   }
+  // };
+
+  const googleAuth = () => {
     try {
-      const res = await googleLogin().unwrap();
-      dispatch(setCredentials({ ...res }));
-      navigate(redirect);
-      // fetch("http://localhost:5000/auth/google", {
-      //   method: "GET",
-      //   headers: {
-      //     Accept: "application/json",
-      //     "Content-Type": "application/json",
-      //     Cache: "no-cache",
-      //   },
-      //   credentials: "same-origin",
-      // });
-      // window.open("http://localhost:5000/auth/google", "_self");
+      window.location.href = "http://localhost:5000/auth/google";
     } catch (error) {
-      toast.error(error.data.message || error.error);
+      toast.error(error.message);
     }
   };
 
   return (
     <FormContainer>
       <h1>Sign In</h1>
-      <Form>
+      <Form onSubmit={submitHandler}>
         <Form.Group controlId='email' className='my-3'>
           <Form.Label>Email Address</Form.Label>
           <Form.Control
@@ -96,7 +115,6 @@ const LoginScreen = () => {
           variant='primary'
           className='mt-2'
           disabled={isLoading}
-          onClick={submitHandler}
         >
           Sign In
         </Button>
@@ -122,7 +140,7 @@ const LoginScreen = () => {
             alignItems: "center",
             justifyContent: "center",
           }}
-          disabled={isLoading}
+          // disabled={gLoginLoading}
           onClick={googleAuth}
         >
           <img
@@ -139,7 +157,7 @@ const LoginScreen = () => {
       <Row className='py-3'>
         <Col>
           New Customer ?{" "}
-          <Link to={redirect ? `/register?redirect${redirect}` : "/register"}>
+          <Link to={redirect ? `/register?redirect=${redirect}` : "/register"}>
             Register
           </Link>
         </Col>
