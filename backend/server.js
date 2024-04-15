@@ -73,19 +73,21 @@ app.get(
 
       // Retrieve user details from the authenticated user object
       const { _id, name, email, isAdmin } = req.user;
-      const userId = req.user._id.toString();
+      const user = await User.findOne({ email });
+      const userDetails = {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        isAdmin: user.isAdmin,
+        token: res.cookie.jwt,
+      };
+      const userId = user._id.toString();
 
       // Generate a JWT token
       generateToken(res, userId);
 
       // Dispatch the setCredentials action
-      const userDetails = {
-        _id: userId,
-        name,
-        email,
-        isAdmin,
-        token: res.cookie.jwt,
-      };
+
       res.redirect(
         `http://localhost:3000/login?_id=${userDetails._id}&name=${userDetails.name}&email=${userDetails.email}&isAdmin=${userDetails.isAdmin}&token=${userDetails.token}`
       );
