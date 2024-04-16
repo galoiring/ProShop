@@ -69,28 +69,26 @@ app.get(
   }),
   async (req, res, next) => {
     try {
-      console.log("req.user:", req.user);
-
       // Retrieve user details from the authenticated user object
       const { _id, name, email, isAdmin } = req.user;
-      const user = await User.findOne({ email });
-      const userDetails = {
-        _id: user._id,
-        name: user.name,
-        email: user.email,
-        isAdmin: user.isAdmin,
-        token: res.cookie.jwt,
-      };
-      const userId = user._id.toString();
-
+      // console.log(req.user.cookie.jwt);
       // Generate a JWT token
-      generateToken(res, userId);
+      generateToken(res, _id);
 
-      // Dispatch the setCredentials action
+      // Encode URL parameters using encodeURIComponent
+      const params = new URLSearchParams({
+        _id,
+        name,
+        email,
+        isAdmin: isAdmin.toString(), // Convert boolean to string
+        token: res.cookie.jwt,
+      });
 
-      res.redirect(
-        `http://localhost:3000/login?_id=${userDetails._id}&name=${userDetails.name}&email=${userDetails.email}&isAdmin=${userDetails.isAdmin}&token=${userDetails.token}`
-      );
+      // Construct the redirect URL with encoded parameters
+      const redirectUrl = `http://localhost:3000/login?${params.toString()}`;
+      console.log(redirectUrl);
+      // Redirect the user to the frontend login page with encoded URL parameters
+      res.redirect(redirectUrl);
     } catch (error) {
       console.error("Error handling Google OAuth2.0 callback:", error);
       res

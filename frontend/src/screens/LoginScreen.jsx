@@ -30,16 +30,26 @@ const LoginScreen = () => {
   }, [userInfo, redirect, navigate]);
 
   useEffect(() => {
-    const urlParams = new URLSearchParams(search);
-    const _id = urlParams.get("_id");
-    const name = urlParams.get("name");
-    const email = urlParams.get("email");
-    const isAdmin = urlParams.get("isAdmin") === "true"; // Convert string to boolean
-    const token = urlParams.get("token");
-    console.log("useEffect details: ", name);
+    const queryParams = new URLSearchParams(search);
+    const userDetails = {};
+
+    // Decode and assign each parameter from the URL
+    queryParams.forEach((value, key) => {
+      userDetails[key] = decodeURIComponent(value);
+    });
+
+    // Convert isAdmin to boolean
+    userDetails.isAdmin = userDetails.isAdmin === "true";
+
     // Dispatch action to set credentials if all required parameters are present
-    if (_id && name && email && typeof isAdmin === "boolean" && token) {
-      dispatch(setCredentials({ _id, name, email, isAdmin }));
+    if (
+      userDetails._id &&
+      userDetails.name &&
+      userDetails.email &&
+      typeof userDetails.isAdmin === "boolean" &&
+      userDetails.token
+    ) {
+      dispatch(setCredentials(userDetails));
       navigate(redirect); // Redirect to home page after setting credentials
     }
   }, [search, dispatch, navigate]);
