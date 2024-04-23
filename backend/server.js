@@ -71,22 +71,17 @@ app.get(
     try {
       // Retrieve user details from the authenticated user object
       const { _id, name, email, isAdmin } = req.user;
-      // console.log(req.user.cookie.jwt);
       // Generate a JWT token
-      generateToken(res, _id);
+      generateToken(res, _id, email, name, isAdmin);
+      const jwtToken = req.cookies.jwt; // Access the JWT token from the request cookies
 
       // Encode URL parameters using encodeURIComponent
       const params = new URLSearchParams({
-        _id,
-        name,
-        email,
-        isAdmin: isAdmin.toString(), // Convert boolean to string
-        token: res.cookie.jwt,
+        token: jwtToken,
       });
 
       // Construct the redirect URL with encoded parameters
       const redirectUrl = `http://localhost:3000/login?${params.toString()}`;
-      console.log(redirectUrl);
       // Redirect the user to the frontend login page with encoded URL parameters
       res.redirect(redirectUrl);
     } catch (error) {
