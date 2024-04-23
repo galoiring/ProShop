@@ -8,6 +8,8 @@ import { useLoginMutation } from "../slices/userApiSlice";
 
 import { setCredentials } from "../slices/authSlice";
 import { toast } from "react-toastify";
+import GoogleButton from "react-google-button";
+import { jwtDecode } from "jwt-decode";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
@@ -31,26 +33,34 @@ const LoginScreen = () => {
 
   useEffect(() => {
     const queryParams = new URLSearchParams(search);
+    const token = queryParams.get("token");
     const userDetails = {};
 
-    // Decode and assign each parameter from the URL
-    queryParams.forEach((value, key) => {
-      userDetails[key] = decodeURIComponent(value);
-    });
+    if (token) {
+      try {
+        // Decode the JWT token to extract user information
 
-    // Convert isAdmin to boolean
-    userDetails.isAdmin = userDetails.isAdmin === "true";
+        const decodedToken = jwtDecode(token);
+        const { userId, name, email, isAdmin } = decodedToken;
+        userDetails._id = userId;
+        userDetails.name = name;
+        userDetails.email = email;
+        userDetails.isAdmin = userDetails.isAdmin === "true";
 
-    // Dispatch action to set credentials if all required parameters are present
-    if (
-      userDetails._id &&
-      userDetails.name &&
-      userDetails.email &&
-      typeof userDetails.isAdmin === "boolean" &&
-      userDetails.token
-    ) {
-      dispatch(setCredentials(userDetails));
-      navigate(redirect); // Redirect to home page after setting credentials
+        if (
+          userDetails._id &&
+          userDetails.name &&
+          userDetails.email &&
+          typeof userDetails.isAdmin === "boolean"
+        ) {
+          dispatch(setCredentials(userDetails));
+          navigate(redirect); // Redirect to home page after setting credentials
+        }
+
+        // Dispatch action to set credentials if all required parameters are present
+      } catch (error) {
+        console.error("Error decoding JWT token:", error);
+      }
     }
   }, [search, dispatch, navigate]);
 
@@ -64,25 +74,6 @@ const LoginScreen = () => {
       toast.error(error.data.message || error.error);
     }
   };
-
-  // const googleAuth = async () => {
-  //   try {
-  //     dispatch(googleSignInStart());
-  //     window.location.href = "http://localhost:5000/auth/google";
-
-  //     // After the redirect, parse the URL parameters and dispatch setCredentials
-  //     const params = new URLSearchParams(window.location.search);
-  //     const userDetailsString = params.get("_id");
-  //     console.log(userDetailsString);
-  //     if (userDetailsString) {
-  //       const userDetails = JSON.parse(decodeURIComponent(userDetailsString));
-  //       dispatch(setCredentials(userDetails));
-  //       navigate("/");
-  //     }
-  //   } catch (error) {
-  //     toast.error(error.data.message || error.error);
-  //   }
-  // };
 
   const googleAuth = () => {
     try {
@@ -126,35 +117,7 @@ const LoginScreen = () => {
 
         <h2 className='mt-2'>Or </h2>
 
-        <Button
-          type='button'
-          variant='primary'
-          className='mt-2'
-          style={{
-            width: "100%",
-            textAlign: "center",
-            backgroundColor: "#4285F4",
-            color: "white",
-            border: "none",
-            borderRadius: "4px",
-            padding: "12px",
-            fontWeight: "bold",
-            boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2)",
-            cursor: "pointer",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-          // disabled={gLoginLoading}
-          onClick={googleAuth}
-        >
-          <img
-            src='./images/google.png'
-            alt='Google Logo'
-            style={{ width: "24px", height: "24px", marginRight: "8px" }}
-          />
-          Sign In with Google
-        </Button>
+        <GoogleButton onClick={googleAuth} />
 
         {isLoading && <Loader />}
       </Form>
