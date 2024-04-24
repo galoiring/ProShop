@@ -45,7 +45,7 @@ const LoginScreen = () => {
         userDetails._id = userId;
         userDetails.name = name;
         userDetails.email = email;
-        userDetails.isAdmin = userDetails.isAdmin === "true";
+        userDetails.isAdmin = isAdmin === "true";
 
         if (
           userDetails._id &&
@@ -62,7 +62,7 @@ const LoginScreen = () => {
         console.error("Error decoding JWT token:", error);
       }
     }
-  }, [search, dispatch, navigate]);
+  }, [search, dispatch, navigate, redirect]);
 
   const submitHandler = async (e) => {
     e.preventDefault();
