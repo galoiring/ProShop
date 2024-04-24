@@ -8,14 +8,12 @@ import orderRoutes from "./routes/orderRoutes.js";
 import uploadRoutes from "./routes/uploadRoutes.js";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
-import cors from "cors"; // Import the cors middleware
+import cors from "cors";
 
 import passport from "passport";
 import "./config/passport.js";
 import generateToken from "./utils/generateToken.js";
 import session from "express-session";
-import jwt from "jsonwebtoken";
-import User from "./models/userModel.js";
 dotenv.config();
 
 const port = process.env.PORT || 5000;
