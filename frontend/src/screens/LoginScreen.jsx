@@ -79,7 +79,7 @@ const LoginScreen = () => {
     try {
       const baseUrl =
         process.env.NODE_ENV === "production"
-          ? `${window.location.origin}:5000/auth/google`
+          ? `${window.location.origin}:10000/auth/google`
           : "http://localhost:5000/auth/google";
       window.location.href = baseUrl;
     } catch (error) {
