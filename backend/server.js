@@ -79,8 +79,10 @@ app.get(
       });
 
       // Construct the redirect URL with encoded parameters
-      const redirectUrl = `http://localhost:3000/login?${params.toString()}`;
-      // Redirect the user to the frontend login page with encoded URL parameters
+      const redirectUrl =
+        process.env.NODE_ENV === "production"
+          ? `${req.protocol}://${req.get("host")}/login?${params.toString()}`
+          : `http://localhost:3000/login?${params.toString()}`; // Redirect the user to the frontend login page with encoded URL parameters
       res.redirect(redirectUrl);
     } catch (error) {
       console.error("Error handling Google OAuth2.0 callback:", error);
