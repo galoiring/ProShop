@@ -6,21 +6,59 @@ import generateToken from "../utils/generateToken.js";
 //@route POST /api/users/login
 //@access Public
 const authUser = asyncHandler(async (req, res) => {
-  const { email, password } = req.body;
-  const user = await User.findOne({ email });
+  const { name, email, password } = req.body;
 
-  if (user && (await user.matchPassword(password))) {
-    generateToken(res, user._id);
+  // Check if password is provided
+  if (password) {
+    // Regular user login
+    const user = await User.findOne({ email });
+    console.log("user regular: ", user);
 
-    res.status(200).json({
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      isAdmin: user.isAdmin,
-    });
+    if (user && (await user.matchPassword(password))) {
+      generateToken(res, user._id);
+      res.status(200).json({
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        isAdmin: user.isAdmin,
+      });
+    } else {
+      res.status(401);
+      throw new Error("Invalid email or password");
+    }
   } else {
-    res.status(401);
-    throw new Error("Invalide email or password");
+    if (!name || !email) {
+      res.status(400);
+      throw new Error("Name and email are required for Google login");
+    }
+    // Google authentication
+    const user = await User.findOne({ email });
+
+    if (user) {
+      // User exists, generate token
+      console.log("inside user CONTROLLER");
+      generateToken(res, user._id);
+
+      res.status(200).json({
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        isAdmin: user.isAdmin,
+      });
+    } else {
+      // User doesn't exist, create a new user without a password
+      const newUser = await User.create({ name, email });
+
+      // Generate token for the new user
+      generateToken(res, newUser._id);
+
+      res.status(201).json({
+        _id: newUser._id,
+        name: newUser.name,
+        email: newUser.email,
+        isAdmin: newUser.isAdmin,
+      });
+    }
   }
 });
 

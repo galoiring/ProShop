@@ -1,13 +1,15 @@
-import React from "react";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Form, Row, Col, Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import FormContainer from "../components/FormContainer";
 import Loader from "../components/UI/Loader";
 import { useLoginMutation } from "../slices/userApiSlice";
+
 import { setCredentials } from "../slices/authSlice";
 import { toast } from "react-toastify";
+import GoogleButton from "react-google-button";
+import { jwtDecode } from "jwt-decode";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
@@ -23,23 +25,61 @@ const LoginScreen = () => {
   const sp = new URLSearchParams(search);
   const redirect = sp.get("redirect") || "/";
 
-  useEffect(
-    (userInfo, redirect, navigate) => {
-      if (userInfo) {
-        navigate(redirect);
+  useEffect(() => {
+    if (userInfo) {
+      navigate(redirect);
+    }
+  }, [userInfo, redirect, navigate]);
+
+  useEffect(() => {
+    const queryParams = new URLSearchParams(search);
+    const token = queryParams.get("token");
+    const userDetails = {};
+
+    if (token) {
+      try {
+        // Decode the JWT token to extract user information
+
+        const decodedToken = jwtDecode(token);
+        const { userId, name, email, isAdmin } = decodedToken;
+        userDetails._id = userId;
+        userDetails.name = name;
+        userDetails.email = email;
+        userDetails.isAdmin = isAdmin === "true";
+
+        if (
+          userDetails._id &&
+          userDetails.name &&
+          userDetails.email &&
+          typeof userDetails.isAdmin === "boolean"
+        ) {
+          dispatch(setCredentials(userDetails));
+          navigate(redirect); // Redirect to home page after setting credentials
+        }
+
+        // Dispatch action to set credentials if all required parameters are present
+      } catch (error) {
+        console.error("Error decoding JWT token:", error);
       }
-    },
-    [userInfo, redirect]
-  );
+    }
+  }, [search, dispatch, navigate, redirect]);
 
   const submitHandler = async (e) => {
     e.preventDefault();
     try {
       const res = await login({ email, password }).unwrap();
-      dispatch(setCredentials({ ...res }));
+      dispatch(setCredentials(res));
       navigate(redirect);
     } catch (error) {
       toast.error(error.data.message || error.error);
+    }
+  };
+
+  const googleAuth = () => {
+    try {
+      window.location.href = "http://localhost:5000/auth/google";
+    } catch (error) {
+      toast.error(error.message);
     }
   };
 
@@ -75,13 +115,17 @@ const LoginScreen = () => {
           Sign In
         </Button>
 
+        <h2 className='mt-2'>Or </h2>
+
+        <GoogleButton onClick={googleAuth} />
+
         {isLoading && <Loader />}
       </Form>
 
       <Row className='py-3'>
         <Col>
           New Customer ?{" "}
-          <Link to={redirect ? `/register?redirect${redirect}` : "/register"}>
+          <Link to={redirect ? `/register?redirect=${redirect}` : "/register"}>
             Register
           </Link>
         </Col>
