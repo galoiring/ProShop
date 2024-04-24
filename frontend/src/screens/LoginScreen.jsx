@@ -79,7 +79,7 @@ const LoginScreen = () => {
     try {
       const baseUrl =
         process.env.NODE_ENV === "production"
-          ? `http://0.0.0.0:10000/auth/google`
+          ? `http://${req.ip}:10000/auth/google`
           : "http://localhost:5000/auth/google";
 
       console.log("URL: ", baseUrl);
