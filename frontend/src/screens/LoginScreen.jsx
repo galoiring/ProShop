@@ -81,6 +81,8 @@ const LoginScreen = () => {
         process.env.NODE_ENV === "production"
           ? `${window.location.origin}:10000/auth/google`
           : "http://localhost:5000/auth/google";
+
+      console.log("URL: ", baseUrl);
       window.location.href = baseUrl;
     } catch (error) {
       toast.error(error.message);

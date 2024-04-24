@@ -85,6 +85,8 @@ app.get(
               "host"
             )}:3000/login?${params.toString()}`
           : `http://localhost:3000/login?${params.toString()}`; // Redirect the user to the frontend login page with encoded URL parameters
+
+      console.log("redirect URL: ", redirectUrl);
       res.redirect(redirectUrl);
     } catch (error) {
       console.error("Error handling Google OAuth2.0 callback:", error);
