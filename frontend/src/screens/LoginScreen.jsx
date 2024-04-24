@@ -75,12 +75,20 @@ const LoginScreen = () => {
     }
   };
 
-  const googleAuth = () => {
+  const googleAuth = async () => {
     try {
-      const baseUrl =
-        process.env.NODE_ENV === "production"
-          ? `http://${req.ip}:10000/auth/google`
-          : "http://localhost:5000/auth/google";
+      let baseUrl;
+      if (process.env.NODE_ENV === "production") {
+        // Fetch backend IP address from API endpoint
+        const response = await fetch(
+          "https://proshop-vtn7.onrender.com/api/ip"
+        );
+        const data = await response.json();
+        const backendIP = data.ip;
+        baseUrl = `http://${backendIP}:10000/auth/google`;
+      } else {
+        baseUrl = "http://localhost:5000/auth/google";
+      }
 
       console.log("URL: ", baseUrl);
       window.location.href = baseUrl;
@@ -88,6 +96,20 @@ const LoginScreen = () => {
       toast.error(error.message);
     }
   };
+
+  // const googleAuth = () => {
+  //   try {
+  //     const baseUrl =
+  //       process.env.NODE_ENV === "production"
+  //         ? `http://${req.ip}:10000/auth/google`
+  //         : "http://localhost:5000/auth/google";
+
+  //     console.log("URL: ", baseUrl);
+  //     window.location.href = baseUrl;
+  //   } catch (error) {
+  //     toast.error(error.message);
+  //   }
+  // };
 
   return (
     <FormContainer>
