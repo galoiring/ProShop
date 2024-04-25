@@ -63,6 +63,7 @@ app.get(
 app.get(
   "/auth/google/callback",
   passport.authenticate("google", {
+    failureRedirect: "/login",
     session: false,
   }),
   async (req, res, next) => {
