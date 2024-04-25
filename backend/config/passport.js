@@ -10,7 +10,7 @@ passport.use(
     {
       clientID: process.env.CLIENT_ID,
       clientSecret: process.env.CLIENT_SECRET,
-      callbackURL: "https://proshop-1-9ulo.onrender.com/auth/google/callback",
+      callbackURL: "/auth/google/callback",
       passReqToCallback: true,
     },
 
