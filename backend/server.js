@@ -82,7 +82,7 @@ app.get(
       // Construct the redirect URL with encoded parameters
       const redirectUrl =
         process.env.NODE_ENV === "production"
-          ? `${req.protocol}://${req.ip}:3000/login?${params.toString()}`
+          ? `https://proshop-1-9ulo.onrender.com/login?${params.toString()}`
           : `http://localhost:3000/login?${params.toString()}`; // Redirect the user to the frontend login page with encoded URL parameters
 
       console.log("redirect URL: ", redirectUrl);
