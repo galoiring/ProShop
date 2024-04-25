@@ -63,7 +63,6 @@ app.get(
 app.get(
   "/auth/google/callback",
   passport.authenticate("google", {
-    failureRedirect: "/login",
     session: false,
   }),
   async (req, res, next) => {
@@ -84,7 +83,7 @@ app.get(
       //   process.env.NODE_ENV === "production"
       //     ? `https://proshop-1-9ulo.onrender.com/login?${params.toString()}`
       //     : `http://localhost:3000/login?${params.toString()}`; // Redirect the user to the frontend login page with encoded URL parameters
-      redirectUrl = `https://proshop-1-9ulo.onrender.com/login?${params.toString()}`;
+      redirectUrl = `https://proshop-vtn7.onrender.com/login?${params.toString()}`;
       console.log("redirect URL: ", redirectUrl);
       res.redirect(redirectUrl);
     } catch (error) {
