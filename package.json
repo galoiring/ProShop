@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "eCommerce application build with MERN stack",
   "type": "module",
-  "proxy": "http://localhost:5000",
+  "proxy": "https://proshop-1-9ulo.onrender.com",
   "main": "server.js",
   "scripts": {
     "start": "node backend/server.js",
