@@ -3,7 +3,7 @@
 //     ? "http://proshop-v2-backend:5000"
 //     : "";
 
-export const BASE_URL = "";
+export const BASE_URL = "https://proshop-1-9ulo.onrender.com";
 
 export const PRODUCTS_URL = "/api/products";
 export const USERS_URL = "/api/users";
