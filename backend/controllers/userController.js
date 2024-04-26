@@ -48,6 +48,7 @@ const authUser = asyncHandler(async (req, res) => {
     } else {
       // User doesn't exist, create a new user without a password
       const newUser = await User.create({ name, email });
+      console.log("inside user CONTROLLER");
 
       // Generate token for the new user
       generateToken(res, newUser._id);
