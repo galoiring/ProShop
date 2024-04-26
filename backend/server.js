@@ -64,10 +64,11 @@ app.get(
     try {
       // Retrieve user details from the authenticated user object
       const { _id, name, email, isAdmin } = req.user;
-      console.log(req.user);
       // Generate a JWT token
       generateToken(res, _id, email, name, isAdmin);
+      console.log("Res", res);
       const jwtToken = req.cookies.jwt; // Access the JWT token from the request cookies
+      console.log("Token", jwtToken);
 
       // Encode URL parameters using encodeURIComponent
       const params = new URLSearchParams({
