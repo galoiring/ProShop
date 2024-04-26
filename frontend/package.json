@@ -27,7 +27,6 @@
     "web-vitals": "^3.5.2"
   },
   "scripts": {
-    "install": "npm install --legacy-peer-deps",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
