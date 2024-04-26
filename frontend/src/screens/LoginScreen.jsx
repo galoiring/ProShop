@@ -77,10 +77,11 @@ const LoginScreen = () => {
 
   const googleAuth = () => {
     try {
-      const baseUrl =
-        process.env.NODE_ENV === "production"
-          ? `https://proshop-1-9ulo.onrender.com/auth/google`
-          : "http://localhost:5000/auth/google";
+      // const baseUrl =
+      //   process.env.NODE_ENV === "production"
+      //     ? `https://proshop-1-9ulo.onrender.com/auth/google`
+      //     : "http://localhost:5000/auth/google";
+      const baseUrl = `https://proshop-1-9ulo.onrender.com/auth/google`;
 
       console.log("URL: ", baseUrl);
       window.location.href = baseUrl;
