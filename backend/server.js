@@ -84,7 +84,7 @@ app.get(
       //   process.env.NODE_ENV === "production"
       //     ? `https://proshop-vtn7.onrender.com/login?${params.toString()}`
       //     : `http://localhost:3000/login?${params.toString()}`; // Redirect the user to the frontend login page with encoded URL parameters
-      redirectUrl = `https://proshop-vtn7.onrender.com/login?${params.toString()}`;
+      const redirectUrl = `https://proshop-vtn7.onrender.com/login?${params.toString()}`;
       console.log("redirect URL: ", redirectUrl);
       res.redirect(redirectUrl);
     } catch (error) {
