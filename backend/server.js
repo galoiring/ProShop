@@ -47,12 +47,6 @@ app.use("/api/users", userRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/upload", uploadRoutes);
 
-// Endpoint to retrieve the server's IP address
-app.get("/api/ip", (req, res) => {
-  const ip = req.ip; // This will retrieve the client's IP address, you might want to replace it with a more accurate way to retrieve the server's IP
-  res.json({ ip });
-});
-
 app.get(
   "/auth/google",
   passport.authenticate("google", {
@@ -70,6 +64,7 @@ app.get(
     try {
       // Retrieve user details from the authenticated user object
       const { _id, name, email, isAdmin } = req.user;
+      console.log(req.user);
       // Generate a JWT token
       generateToken(res, _id, email, name, isAdmin);
       const jwtToken = req.cookies.jwt; // Access the JWT token from the request cookies
