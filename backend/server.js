@@ -65,9 +65,7 @@ app.get(
       // Retrieve user details from the authenticated user object
       const { _id, name, email, isAdmin } = req.user;
       // Generate a JWT token
-      generateToken(res, _id, email, name, isAdmin);
-      console.log("Res", res);
-      const jwtToken = req.cookies.jwt; // Access the JWT token from the request cookies
+      const jwtToken = generateToken(res, _id, email, name, isAdmin);
       console.log("Token", jwtToken);
 
       // Encode URL parameters using encodeURIComponent
@@ -76,11 +74,11 @@ app.get(
       });
 
       // Construct the redirect URL with encoded parameters
-      // const redirectUrl =
-      //   process.env.NODE_ENV === "production"
-      //     ? `https://proshop-vtn7.onrender.com/login?${params.toString()}`
-      //     : `http://localhost:3000/login?${params.toString()}`; // Redirect the user to the frontend login page with encoded URL parameters
-      const redirectUrl = `https://proshopfront.onrender.com/login?${params.toString()}`;
+      const redirectUrl =
+        process.env.NODE_ENV === "production"
+          ? `https://proshop-vtn7.onrender.com/login?${params.toString()}`
+          : `http://localhost:3000/login?${params.toString()}`; // Redirect the user to the frontend login page with encoded URL parameters
+      // const redirectUrl = `http://localhost:3000/login?${params.toString()}`;
       console.log("redirect URL: ", redirectUrl);
       res.redirect(redirectUrl);
     } catch (error) {

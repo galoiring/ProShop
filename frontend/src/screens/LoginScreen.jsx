@@ -78,7 +78,7 @@ const LoginScreen = () => {
   const googleAuth = () => {
     try {
       // const baseUrl =
-      //   process.env.NODE_ENV === "production"
+      //   process.env.ENVIRO === "production"
       //     ? `https://proshop-1-9ulo.onrender.com/auth/google`
       //     : "http://localhost:5000/auth/google";
       const baseUrl = `https://proshop-1-9ulo.onrender.com/auth/google`;

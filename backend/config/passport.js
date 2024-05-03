@@ -5,12 +5,17 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
+const url =
+  process.env.NODE_ENV === "production"
+    ? "https://proshop-1-9ulo.onrender.com/auth/google/callback"
+    : "http://localhost:5000/auth/google/callback";
+
 passport.use(
   new GoogleStrategy(
     {
       clientID: process.env.CLIENT_ID,
       clientSecret: process.env.CLIENT_SECRET,
-      callbackURL: "https://proshop-1-9ulo.onrender.com/auth/google/callback",
+      callbackURL: url,
       passReqToCallback: true,
     },
 
